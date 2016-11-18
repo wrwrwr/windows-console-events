@@ -34,4 +34,4 @@ class Flags(enum.IntEnum):
             try:
                 return cls[name]
             except KeyError:
-                return cls['CREATE_' + name]
+                return cls['CREATE_{}'.format(name)]
