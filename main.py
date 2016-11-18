@@ -3,6 +3,7 @@ import ctypes
 import functools
 import os
 import subprocess
+import sys
 import time
 
 from events import Events
@@ -28,7 +29,7 @@ mode = args.mode
 
 print_now("Main: started")
 print_now("Main: creating Sub, with {}".format(flags_str))
-sub = subprocess.Popen(('python', 'sub.py'), creationflags=flags)
+sub = subprocess.Popen((sys.executable, 'sub.py'), creationflags=flags)
 time.sleep(3)
 
 print_now("Main: generating {}".format(event.name))

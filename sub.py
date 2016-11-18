@@ -1,6 +1,7 @@
 import functools
 import signal
 import subprocess
+import sys
 import time
 # import winsound
 
@@ -16,7 +17,7 @@ def handler(signum, frame):
 
 print_now("Sub: started")
 print_now("Sub: creating Subsub, no flags")
-subsub = subprocess.Popen(('python', 'subsub.py'))
+subsub = subprocess.Popen((sys.executable, 'subsub.py'))
 
 for sig in Signals:
     try:
