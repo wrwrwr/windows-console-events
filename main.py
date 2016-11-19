@@ -8,7 +8,6 @@ import time
 
 from events import Events
 from flags import Flags
-from signals import Signals
 
 parser = argparse.ArgumentParser(description="Test Windows console events.")
 parser.add_argument('flags', help="sub creation flags (int or name)")
