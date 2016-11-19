@@ -3,28 +3,21 @@ import signal
 import subprocess
 import sys
 import time
-# import winsound
 
 from signals import Signals
 
 print_now = functools.partial(print, flush=True)
-
-
-def handler(signum, frame):
-    print_now("Sub: handler for {}".format(Signals(signum).name))
-    # winsound.Beep(signum * 1000, 500)
-
-
 print_now("Sub: started")
 print_now("Sub: creating Subsub, no flags")
 subsub = subprocess.Popen((sys.executable, 'subsub.py'))
 
+
+def signal_handler(signum, frame):
+    print_now("Sub: signal handler for {}".format(Signals(signum).name))
+
 for sig in Signals:
-    try:
-        signal.signal(sig, handler)
-        print_now("Sub: registered handler for {}".format(sig.name))
-    except ValueError:
-        pass
+    signal.signal(sig, signal_handler)
+    print_now("Sub: registered signal handler for {}".format(sig.name))
 
 for i in range(30):
     print_now("Sub: alive")
