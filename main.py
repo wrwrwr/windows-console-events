@@ -10,8 +10,6 @@ from events import Events
 from flags import Flags
 from signals import Signals
 
-print_now = functools.partial(print, flush=True)
-
 parser = argparse.ArgumentParser(description="Test Windows console events.")
 parser.add_argument('flags', help="sub creation flags (int or name)")
 parser.add_argument('event', help="the event to generate (int or name)")
@@ -27,6 +25,7 @@ except KeyError:
 event = Events.get(args.event)
 mode = args.mode
 
+print_now = functools.partial(print, flush=True)
 print_now("Main: started")
 print_now("Main: creating Sub, with {}".format(flags_str))
 sub = subprocess.Popen((sys.executable, 'sub.py'), creationflags=flags)
@@ -38,10 +37,8 @@ if mode == 'send':
 elif mode == 'kill':
     os.kill(sub.pid, event)
 else:
-    kernel32 = ctypes.windll.kernel32
-    if not kernel32.GenerateConsoleCtrlEvent(int(event), sub.pid):
-        error = kernel32.GetLastError()
-        raise ValueError("GCCE failed with {}".format(error))
+    if not ctypes.windll.kernel32.GenerateConsoleCtrlEvent(event, sub.pid):
+        raise ctypes.WinError()
 
 for i in range(30):
     print_now("Main: alive")
