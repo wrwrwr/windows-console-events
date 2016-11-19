@@ -34,23 +34,28 @@ A tree of processes is created:
     Main <-- Sub <-- Subsub
 
 ``Sub`` is created with the given creation flags and registers no-op
-handlers for all available signals. The most interesting flag is 512 or
-``CREATE_NEW_PROCESS_GROUP``. ``Main`` generates the given console event
-after a few seconds (targeting just ``Sub``).
+handlers for all available signals.
+``Subsub`` is created without any flags and registers an event handler
+returning False (using SetConsoleCtrlHandler_).
+``Main`` generates the given console event after a few seconds
+(targeting just ``Sub``).
 All three processes loop printing "alive" for 90 seconds.
+
+.. _SetConsoleCtrlHandler: https://msdn.microsoft.com/en-us/library/windows/desktop/ms686016(v=vs.85).aspx
 
 Some results
 ============
 
 Windows 10 with Python 3.5.2:
 
-* ``CTRL_C_EVENT``: Without the new group flag raises `KeyboardInterrupt` for
-  all processes in the group (after about 30 seconds). With the flag does not
-  terminate anything. Without the flag only, ``SIGINT`` handlers can be used
-  to modify the behavior.
+* ``CTRL_C_EVENT``: Without the new group flag raises ``KeyboardInterrupt``
+  for all processes in the group (after about 30 seconds). With the flag does
+  not terminate anything. Without the flag only, ``SIGINT`` and
+  ``CTRL_C_EVENT`` handlers can be used to modify the behavior.
 * ``CTRL_BREAK_EVENT``: Without the flag terminates the main process together
   with its console, with a delay. With the flag terminates the targeted group.
-  Possibly with the flag only, `SIGBREAK` handlers can prevent termination.
+  Possibly with the flag only, ``SIGBREAK`` and ``CTRL_BREAK_EVENT`` handlers
+  can prevent termination.
 * ``CTRL_CLOSE_EVENT``, ``CTRL_LOGOFF_EVENT``, and ``CTRL_SHUTDOWN_EVENT``:
   These only terminate the target, not its descendants, with or without the
   flag. No handlers are called in any case.
